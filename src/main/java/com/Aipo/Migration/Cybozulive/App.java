@@ -2,22 +2,22 @@ package com.Aipo.Migration.Cybozulive;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-
-
-
 
 public class App {
 	//パスワード生成
@@ -32,10 +32,31 @@ public class App {
 		return sb.toString();
 	}
 
+	//csvファイル生成の関数
+	public static BufferedWriter makeCsvFile(String fileName) {
+		BufferedWriter result = null;
+		try {
+			result = new BufferedWriter(
+			        new OutputStreamWriter(
+			                new FileOutputStream(
+			                        new File("aipo-csv/" + fileName)), "Shift-JIS"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
         try {
-        	//Aipo用に変換するファイルを引数の記述する
-        	Reader in = new FileReader("utf-8.csv");
+        	System.out.println("CybozuLiveからエクスポートしたファイル名を入力してください");
+        	Scanner scan = new Scanner(System.in);
+        	String fileName = scan.nextLine();
+        	scan.close();
+
+        	//Aipo用に変換するCSVファイルを引数の記述する
+        	Reader in = new FileReader("cybozuLice-csv/" +fileName);
 
         	//読み込んだCSVファイルをフォーマット
 		    CSVParser parser = CSVFormat
@@ -48,46 +69,44 @@ public class App {
         	//読み込んだCSVをListに代入
 	    	List<CSVRecord> recordList = parser.getRecords();
 
-		    //ファイルの生成(if文で配列の要素数によってファイルを作成する)
-			    BufferedWriter bw_50 = new BufferedWriter(
-	                    new OutputStreamWriter(
-	                            new FileOutputStream(
-	                                    new File("Aipo用0~50.csv")), "Shift-JIS"));
+		    //読み込んだCSVのレコード数によって、作成するファイル数を条件分岐
+	    	CSVPrinter printer_50 = null;
+	    	CSVPrinter printer_100 = null;
+	    	CSVPrinter printer_150 = null;
+	    	CSVPrinter printer_200 = null;
+	    	CSVPrinter printer_250 = null;
+	    	CSVPrinter printer_300 = null;
 
-			    BufferedWriter bw_100 = new BufferedWriter(
-	                    new OutputStreamWriter(
-	                            new FileOutputStream(
-	                                    new File("Aipo用51~100.csv")), "Shift-JIS"));
+	    	if(recordList.size() < 51) {
+	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
+	    	} else if (recordList.size() > 50 && recordList.size() < 101) {
+	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
+	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
+	    	} else if (recordList.size() > 100 && recordList.size() < 151) {
+	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
+	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
+	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
+	    	} else if (recordList.size() > 150 && recordList.size() < 201) {
+	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
+	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
+	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
+	    		printer_200 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用151~200.csv"));
+	    	} else if (recordList.size() > 200 && recordList.size() < 251) {
+	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
+	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
+	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
+	    		printer_200 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用151~200.csv"));
+	    		printer_250 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用201~250.csv"));
+	    	} else if (recordList.size() > 250 && recordList.size() < 301) {
+	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
+	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
+	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
+	    		printer_200 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用151~200.csv"));
+	    		printer_250 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用201~250.csv"));
+	    		printer_300 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用251~300.csv"));
+	    	}
 
-			    BufferedWriter bw_150 = new BufferedWriter(
-	                    new OutputStreamWriter(
-	                            new FileOutputStream(
-	                                    new File("Aipo用101~150.csv")), "Shift-JIS"));
-
-			    BufferedWriter bw_200 = new BufferedWriter(
-	                    new OutputStreamWriter(
-	                            new FileOutputStream(
-	                                    new File("Aipo用151~200.csv")), "Shift-JIS"));
-
-			    BufferedWriter bw_250 = new BufferedWriter(
-	                    new OutputStreamWriter(
-	                            new FileOutputStream(
-	                                    new File("Aipo用201~250.csv")), "Shift-JIS"));
-
-			    BufferedWriter bw_300 = new BufferedWriter(
-	                    new OutputStreamWriter(
-	                            new FileOutputStream(
-	                                    new File("Aipo用251~300.csv")), "Shift-JIS"));
-
-		    //プリンターの生成
-        	CSVPrinter printer_50 = CSVFormat.EXCEL.print(bw_50);
-        	CSVPrinter printer_100 = CSVFormat.EXCEL.print(bw_100);
-        	CSVPrinter printer_150 = CSVFormat.EXCEL.print(bw_150);
-        	CSVPrinter printer_200 = CSVFormat.EXCEL.print(bw_200);
-        	CSVPrinter printer_250 = CSVFormat.EXCEL.print(bw_250);
-        	CSVPrinter printer_300 = CSVFormat.EXCEL.print(bw_300);
-
-	    	//Aipoのインポート用に50件ずつListに代入
+	    	//インポートCSVを分割（Aipoが50件ずつしかインポートできないため）
 	    	List<CSVRecord> list_50 = new ArrayList<CSVRecord>();
 	    	List<CSVRecord> list_100 = new ArrayList<CSVRecord>();
 	    	List<CSVRecord> list_150 = new ArrayList<CSVRecord>();
@@ -95,7 +114,6 @@ public class App {
 	    	List<CSVRecord> list_250 = new ArrayList<CSVRecord>();
 	    	List<CSVRecord> list_300 = new ArrayList<CSVRecord>();
 
-	    	//インポートした要素を分割
 		    for(CSVRecord s: recordList) {
 		    	if (s.getRecordNumber() < 51) {
 		    		list_50.add(s);
@@ -112,6 +130,7 @@ public class App {
 		    	}
 		    }
 
+		    //各要素数が0以上だった場合書き込みを行う
 		    if (list_50.size() > 0) {
 				  for(CSVRecord s: list_50) {
 					    String lastName = s.get("姓");
@@ -183,15 +202,6 @@ public class App {
 				  }
 				  printer_300.close();
 		    }
-
-
-
-			    System.out.println(list_50.size());
-			    System.out.println(list_100.size());
-			    System.out.println(list_150.size());
-			    System.out.println(list_200.size());
-			    System.out.println(list_250.size());
-			    System.out.println(list_300.size());
 
 		} catch (IOException e) {
 			System.out.println(e);

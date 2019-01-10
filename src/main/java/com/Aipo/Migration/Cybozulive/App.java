@@ -56,7 +56,7 @@ public class App {
         	scan.close();
 
         	//Aipo用に変換するCSVファイルを引数の記述する
-        	Reader in = new FileReader("cybozuLice-csv/" +fileName);
+        	Reader in = new FileReader("cybozuLive-csv/" + fileName);
 
         	//読み込んだCSVファイルをフォーマット
 		    CSVParser parser = CSVFormat

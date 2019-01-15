@@ -1,4 +1,4 @@
-package com.Aipo.Migration.Cybozulive;
+package com.aipo.migration.cybozulive;
 
 import java.io.BufferedWriter;
 import java.io.File;

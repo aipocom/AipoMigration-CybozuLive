@@ -1,3 +1,11 @@
+/*
+ * This file is part of the com.aipo.migration.cybozulive package.
+ * Copyright (C) 2004-2019 TOWN, Inc.
+ * https://aipo.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 package com.aipo.migration.cybozulive;
 
 import java.io.BufferedWriter;
@@ -9,10 +17,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -20,195 +30,143 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 public class App {
-	//パスワード生成
-	public static String generatePassword(int length) {
-		Random rand = new Random(System.nanoTime());
-		String charset = "!0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < length; i++) {
-			int pos = rand.nextInt(charset.length());
-			sb.append(charset.charAt(pos));
-		}
-		return sb.toString();
-	}
 
-	//csvファイル生成の関数
-	public static BufferedWriter makeCsvFile(String fileName) {
-		BufferedWriter result = null;
-		try {
-			result = new BufferedWriter(
-			        new OutputStreamWriter(
-			                new FileOutputStream(
-			                        new File("aipo-csv/" + fileName)), "Shift-JIS"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+  /** CSVファイル文字コード */
+  private static final String CSV_CHARSET = "Shift-JIS";
 
-	public static void main(String[] args) {
-        try {
-        	System.out.println("CybozuLiveからエクスポートしたファイル名を入力してください");
-        	Scanner scan = new Scanner(System.in);
-        	String fileName = scan.nextLine();
-        	scan.close();
+  /** パスワード */
+  private static final String PASSWORD_CHARSET =
+    "!0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        	//Aipo用に変換するCSVファイルを引数の記述する
-        	Reader in = new FileReader("cybozuLive-csv/" + fileName);
+  /** データフォルダ */
+  private static final String CYBOZULIVE_DIR = "cybozuLive-csv";
 
-        	//読み込んだCSVファイルをフォーマット
-		    CSVParser parser = CSVFormat
-			        .EXCEL
-			        .withIgnoreEmptyLines(true)
-			        .withFirstRecordAsHeader()
-			        .withIgnoreSurroundingSpaces(true)
-			        .parse(in);
+  /** データフォルダ */
+  private static final String AIPO_DIR = "aipo-csv";
 
-        	//読み込んだCSVをListに代入
-	    	List<CSVRecord> recordList = parser.getRecords();
+  /** AipoユーザーCSVファイル名 */
+  private static final String AIPO_USER_CSV_PREFIX = "Aipo_users";
 
-		    //読み込んだCSVのレコード数によって、作成するファイル数を条件分岐
-	    	CSVPrinter printer_50 = null;
-	    	CSVPrinter printer_100 = null;
-	    	CSVPrinter printer_150 = null;
-	    	CSVPrinter printer_200 = null;
-	    	CSVPrinter printer_250 = null;
-	    	CSVPrinter printer_300 = null;
+  /** CSVファイル最大行 */
+  private static final int MAX_ROWS = 50;
 
-	    	if(recordList.size() < 51) {
-	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
-	    	} else if (recordList.size() > 50 && recordList.size() < 101) {
-	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
-	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
-	    	} else if (recordList.size() > 100 && recordList.size() < 151) {
-	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
-	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
-	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
-	    	} else if (recordList.size() > 150 && recordList.size() < 201) {
-	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
-	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
-	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
-	    		printer_200 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用151~200.csv"));
-	    	} else if (recordList.size() > 200 && recordList.size() < 251) {
-	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
-	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
-	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
-	    		printer_200 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用151~200.csv"));
-	    		printer_250 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用201~250.csv"));
-	    	} else if (recordList.size() > 250 && recordList.size() < 301) {
-	    		printer_50 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用50.csv"));
-	    		printer_100 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用51~100.csv"));
-	    		printer_150 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用101~150.csv"));
-	    		printer_200 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用151~200.csv"));
-	    		printer_250 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用201~250.csv"));
-	    		printer_300 = CSVFormat.EXCEL.print(makeCsvFile("Aipo用251~300.csv"));
-	    	}
+  /**
+   * パスワード生成
+   *
+   * @param length
+   * @return
+   */
+  public static String generatePassword(int length) {
+    Random rand = new Random(System.nanoTime());
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < length; i++) {
+      int pos = rand.nextInt(PASSWORD_CHARSET.length());
+      sb.append(PASSWORD_CHARSET.charAt(pos));
+    }
+    return sb.toString();
 
-	    	//インポートCSVを分割（Aipoが50件ずつしかインポートできないため）
-	    	List<CSVRecord> list_50 = new ArrayList<CSVRecord>();
-	    	List<CSVRecord> list_100 = new ArrayList<CSVRecord>();
-	    	List<CSVRecord> list_150 = new ArrayList<CSVRecord>();
-	    	List<CSVRecord> list_200 = new ArrayList<CSVRecord>();
-	    	List<CSVRecord> list_250 = new ArrayList<CSVRecord>();
-	    	List<CSVRecord> list_300 = new ArrayList<CSVRecord>();
+  }
 
-		    for(CSVRecord s: recordList) {
-		    	if (s.getRecordNumber() < 51) {
-		    		list_50.add(s);
-		    	} else if (s.getRecordNumber() > 50 && s.getRecordNumber() < 101) {
-		    		list_100.add(s);
-		    	} else if (s.getRecordNumber() > 100 && s.getRecordNumber() < 151) {
-		    		list_150.add(s);
-		    	} else if (s.getRecordNumber() > 150 && s.getRecordNumber() < 201) {
-		    		list_200.add(s);
-		    	} else if (s.getRecordNumber() > 200 && s.getRecordNumber() < 251) {
-		    		list_250.add(s);
-		    	} else if (s.getRecordNumber() > 250 && s.getRecordNumber() < 301) {
-		    		list_300.add(s);
-		    	}
-		    }
+  /**
+   * csvファイル生成の関数
+   *
+   * @param fileName
+   * @return
+   */
+  public static BufferedWriter makeCsvFile(String fileName) {
+    BufferedWriter result = null;
+    try {
+      result =
+        new BufferedWriter(
+          new OutputStreamWriter(
+            new FileOutputStream(
+              new File(AIPO_DIR + File.separator + fileName)),
+            CSV_CHARSET));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
 
-		    //各要素数が0以上だった場合書き込みを行う
-		    if (list_50.size() > 0) {
-				  for(CSVRecord s: list_50) {
-					    String lastName = s.get("姓");
-					    String firstName = s.get("名");
-					    String kanaLastName = s.get("よみがな姓");
-					    String kanaFirstName = s.get("よみがな名");
-					    String email = s.get("メールアドレス");
-					    printer_50.printRecord(email, generatePassword(8), lastName, firstName, kanaLastName, kanaFirstName);
-				  }
-				  printer_50.close();
-		    }
+  /**
+   * リスト分割
+   *
+   * @param origin
+   * @param size
+   * @return
+   */
+  public static <T> List<List<T>> divide(List<T> origin, int size) {
+    if (origin == null || origin.isEmpty() || size <= 0) {
+      return Collections.emptyList();
+    }
 
-		    if (list_100.size() > 0) {
-				  for(CSVRecord s: list_100) {
-					    String lastName = s.get("姓");
-					    String firstName = s.get("名");
-					    String kanaLastName = s.get("よみがな姓");
-					    String kanaFirstName = s.get("よみがな名");
-					    String email = s.get("メールアドレス");
-					    printer_100.printRecord(email, generatePassword(8), lastName, firstName, kanaLastName, kanaFirstName);
-				  }
-				  printer_100.close();
-		    }
+    int block = origin.size() / size + (origin.size() % size > 0 ? 1 : 0);
 
-		    if (list_150.size() > 0) {
-				  for(CSVRecord s: list_150) {
-					    String lastName = s.get("姓");
-					    String firstName = s.get("名");
-					    String kanaLastName = s.get("よみがな姓");
-					    String kanaFirstName = s.get("よみがな名");
-					    String email = s.get("メールアドレス");
-					    printer_150.printRecord(email, generatePassword(8), lastName, firstName, kanaLastName, kanaFirstName);
-				  }
-				  printer_150.close();
-		    }
+    return IntStream.range(0, block).boxed().map(i -> {
+      int start = i * size;
+      int end = Math.min(start + size, origin.size());
+      return origin.subList(start, end);
+    }).collect(Collectors.toList());
+  }
 
-		    if (list_200.size() > 0) {
-				  for(CSVRecord s: list_200) {
-					    String lastName = s.get("姓");
-					    String firstName = s.get("名");
-					    String kanaLastName = s.get("よみがな姓");
-					    String kanaFirstName = s.get("よみがな名");
-					    String email = s.get("メールアドレス");
-					    printer_200.printRecord(email, generatePassword(8), lastName, firstName, kanaLastName, kanaFirstName);
-				  }
-				  printer_200.close();
-		    }
+  public static void main(String[] args) {
+    try {
+      System.out.println("CybozuLiveからエクスポートしたファイル名を入力してください");
+      Scanner scan = new Scanner(System.in);
+      String fileName = scan.nextLine();
+      scan.close();
 
-		    if (list_250.size() > 0) {
-				  for(CSVRecord s: list_250) {
-					    String lastName = s.get("姓");
-					    String firstName = s.get("名");
-					    String kanaLastName = s.get("よみがな姓");
-					    String kanaFirstName = s.get("よみがな名");
-					    String email = s.get("メールアドレス");
-					    printer_250.printRecord(email, generatePassword(8), lastName, firstName, kanaLastName, kanaFirstName);
-				  }
-				  printer_250.close();
-		    }
+      // Aipo用に変換するCSVファイルを引数の記述する
+      Reader in = new FileReader(CYBOZULIVE_DIR + File.separator + fileName);
 
-		    if (list_300.size() > 0) {
-				  for(CSVRecord s: list_300) {
-					    String lastName = s.get("姓");
-					    String firstName = s.get("名");
-					    String kanaLastName = s.get("よみがな姓");
-					    String kanaFirstName = s.get("よみがな名");
-					    String email = s.get("メールアドレス");
-					    printer_300.printRecord(email, generatePassword(8), lastName, firstName, kanaLastName, kanaFirstName);
-				  }
-				  printer_300.close();
-		    }
+      // 読み込んだCSVファイルをフォーマット
+      CSVParser parser =
+        CSVFormat.EXCEL
+          .withIgnoreEmptyLines(true)
+          .withFirstRecordAsHeader()
+          .withIgnoreSurroundingSpaces(true)
+          .parse(in);
 
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
-		System.out.println("Done");
-	}
+      // 読み込んだCSVをListに代入
+      List<CSVRecord> recordList = parser.getRecords();
+
+      // 読み込んだCSVを50行区切りに分割する
+      List<List<CSVRecord>> divide = divide(recordList, MAX_ROWS);
+
+      int i = 0;
+      for (List<CSVRecord> fileList : divide) {
+        i++;
+        CSVPrinter csvPrinter =
+          CSVFormat.EXCEL.print(
+            makeCsvFile(AIPO_USER_CSV_PREFIX + "_" + i + ".csv"));
+        for (CSVRecord s : fileList) {
+          String lastName = s.get("姓");
+          String firstName = s.get("名");
+          String kanaLastName = s.get("よみがな姓");
+          String kanaFirstName = s.get("よみがな名");
+          String email = s.get("メールアドレス");
+          csvPrinter.printRecord(
+            email,
+            generatePassword(8),
+            lastName,
+            firstName,
+            kanaLastName,
+            kanaFirstName);
+        }
+        csvPrinter.close();
+      }
+
+    } catch (
+
+    IOException e) {
+      System.out.println(e);
+    } catch (
+
+    Exception e) {
+      System.out.println(e);
+    }
+    System.out.println("Done");
+  }
 }

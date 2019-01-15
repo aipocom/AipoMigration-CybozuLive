@@ -44,5 +44,5 @@ jobs:
       - run: mvn install
         
       # run site!
-      - run: mvn site
+      - run: mvn findbugs:findbugs
 

@@ -12,6 +12,7 @@ target
 .mtj.tmp/
 
 # Package Files #
+*.jar
 *.war
 *.nar
 *.ear
@@ -35,8 +36,3 @@ Desktop.ini
 # Mac crap
 .DS_Store
 /work
-
-# Package Files #
-*.jar
-*.war
-*.ear

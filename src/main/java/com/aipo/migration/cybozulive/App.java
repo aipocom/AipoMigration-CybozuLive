@@ -199,71 +199,15 @@ public class App {
           // 読み込んだCSVを50行区切りに分割する
           List<List<CSVRecord>> divide = divide(recordList, MAX_ROWS);
 
-          int i = 0;
-          // CSVファイルを出力
-          if (divide != null && divide.size() > 0) {
-            for (List<CSVRecord> fileList : divide) {
-              CSVPrinter csvPrinter = null;
-              try {
-                i++;
-                csvPrinter =
-                  CSVFormat.EXCEL
-                    .withQuote('"')
-                    .withHeader(
-                      "ユーザー名（メールアドレス）",
-                      "パスワード",
-                      "名前（姓）",
-                      "名前（名）",
-                      "名前（姓・フリガナ）",
-                      "名前（名・フリガナ）",
-                      "電話番号（外線）",
-                      "電話番号（内線）",
-                      "電話番号（携帯）",
-                      "携帯メールアドレス",
-                      "部署名",
-                      "役職",
-                      "社員コード")
-                    .print(
-                      makeCsvFile(
-                        AIPO_USER_CSV_PREFIX
-                          + "_"
-                          + format
-                          + "_"
-                          + i
-                          + ".csv"));
-                if (fileList != null && fileList.size() > 0) {
-                  for (CSVRecord s : fileList) {
-                    String lastName = s.get("姓");
-                    String firstName = s.get("名");
-                    String kanaLastName = s.get("よみがな姓");
-                    String kanaFirstName = s.get("よみがな名");
-                    String email = s.get("メールアドレス");
-                    csvPrinter.printRecord(
-                      email,
-                      generatePassword(8),
-                      lastName,
-                      firstName,
-                      kanaLastName,
-                      kanaFirstName,
-                      "",
-                      "",
-                      "",
-                      "",
-                      "",
-                      "",
-                      "");
-                  }
-                }
-              } catch (Exception e) {
-                System.out.println("エラーが発生しました。");
-                System.out.println(e);
-              } finally {
-                if (csvPrinter != null) {
-                  csvPrinter.close();
-                }
-              }
-            }
+          // 読み込んだCSVファイルのヘッダーの情報を元に条件分岐
+          if (parser.getHeaderMap().containsKey("開始日付")) {
+            System.out.print("カレンダーCSVファイル");
+            calendarExport(divide, format);
+          } else if (parser.getHeaderMap().containsKey("姓")) {
+            System.out.print("メンバー名簿CSVファイル");
+            memberExport(divide, format);
           }
+
         } catch (Exception e) {
           System.out.println("エラーが発生しました。");
           System.out.println(e);

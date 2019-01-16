@@ -45,4 +45,8 @@ jobs:
         
       # run site!
       - run: mvn findbugs:findbugs
+      
+      - store_artifacts:
+        path: /target
+        destination: aipo-migration-cybozuLive-*.jar
 

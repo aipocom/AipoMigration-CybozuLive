@@ -215,7 +215,14 @@ public class App {
                       "名前（姓）",
                       "名前（名）",
                       "名前（姓・フリガナ）",
-                      "名前（名・フリガナ）")
+                      "名前（名・フリガナ）",
+                      "電話番号（外線）",
+                      "電話番号（内線）",
+                      "電話番号（携帯）",
+                      "携帯メールアドレス",
+                      "部署名",
+                      "役職",
+                      "社員コード")
                     .print(
                       makeCsvFile(
                         AIPO_USER_CSV_PREFIX
@@ -237,7 +244,14 @@ public class App {
                       lastName,
                       firstName,
                       kanaLastName,
-                      kanaFirstName);
+                      kanaFirstName,
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "");
                   }
                 }
               } catch (Exception e) {

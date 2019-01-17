@@ -46,6 +46,22 @@
   </dependencies>
 
   <build>
+  <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+      <filtering>true</filtering>
+      <includes>
+        <include>**/version.txt</include>
+      </includes>
+    </resource>
+    <resource>
+      <directory>src/main/resources</directory>
+      <filtering>false</filtering>
+      <excludes>
+        <exclude>**/version.txt</exclude>
+      </excludes>
+    </resource>
+    </resources>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -129,7 +145,10 @@
           </execution>
         </executions>
         <configuration>
-            <finalName>aipo-migration-cybozuLive-${project.version}</finalName>
+            <descriptors>
+              <descriptor>src/main/assembly/distribution.xml</descriptor>
+            </descriptors>
+            <finalName>aipo-migration-cybozuLive</finalName>
             <appendAssemblyId>false</appendAssemblyId>
             <archive>
               <manifest>

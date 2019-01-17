@@ -8,10 +8,6 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>bin</directory>
-            <outputDirectory>/</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>lib</directory>
             <outputDirectory>lib</outputDirectory>
         </fileSet>
@@ -20,6 +16,7 @@
             <outputDirectory>/</outputDirectory>
              <includes>
                 <include>version.txt</include>
+                <include>*.bat</include>
                 <include>*-csv</include>
             </includes>
             <excludes>

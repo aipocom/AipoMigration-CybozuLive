@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -46,130 +47,144 @@
   </dependencies>
 
   <build>
-  <resources>
-    <resource>
-      <directory>src/main/resources</directory>
-      <filtering>true</filtering>
-      <includes>
-        <include>**/version.txt</include>
-      </includes>
-    </resource>
-    <resource>
-      <directory>src/main/resources</directory>
-      <filtering>false</filtering>
-      <excludes>
-        <exclude>**/version.txt</exclude>
-      </excludes>
-    </resource>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/version.txt</include>
+          <include>**/aipo-migration-cybozuLive.bat</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/version.txt</exclude>
+          <exclude>**/aipo-migration-cybozuLive.bat</exclude>
+        </excludes>
+      </resource>
     </resources>
     <pluginManagement>
       <plugins>
         <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>3.0</version>
-        <configuration>
-          <header>header.txt</header>
-          <mapping>
-            <xreg>XML_STYLE</xreg>
-            <psml>XML_STYLE</psml>
-          </mapping>
-          <includes>
-            <include>**/src/**/*.java</include>
-          </includes>
-          <encoding>UTF-8</encoding>
-          <strictCheck>true</strictCheck>
-          <skipExistingHeaders>false</skipExistingHeaders>
-          <properties>
-            <year>2019</year>
-          </properties>
-          <headerDefinitions>
-            <headerDefinition>header-definition.xml</headerDefinition>
-          </headerDefinitions>
-        </configuration>
-      </plugin>
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <version>3.0.5</version>
-            <configuration>
-                <effort>Max</effort>
-                <findbugsXmlOutput>true</findbugsXmlOutput>
-                <xmlOutput>true</xmlOutput>
-            </configuration>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>3.0</version>
+          <configuration>
+            <header>header.txt</header>
+            <mapping>
+              <xreg>XML_STYLE</xreg>
+              <psml>XML_STYLE</psml>
+            </mapping>
+            <includes>
+              <include>**/src/**/*.java</include>
+            </includes>
+            <encoding>UTF-8</encoding>
+            <strictCheck>true</strictCheck>
+            <skipExistingHeaders>false</skipExistingHeaders>
+            <properties>
+              <year>2019</year>
+            </properties>
+            <headerDefinitions>
+              <headerDefinition>header-definition.xml</headerDefinition>
+            </headerDefinitions>
+          </configuration>
         </plugin>
         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
-            <configuration>
-                <mainClass>com.aipo.migration.cybozulive.App</mainClass>
-            </configuration>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>3.0.5</version>
+          <configuration>
+            <effort>Max</effort>
+            <findbugsXmlOutput>true</findbugsXmlOutput>
+            <xmlOutput>true</xmlOutput>
+          </configuration>
         </plugin>
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.22.1</version>
-            <configuration>
-              <useSystemClassLoader>false</useSystemClassLoader>
-            </configuration>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
+          <configuration>
+            <mainClass>com.aipo.migration.cybozulive.App</mainClass>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
-        <plugin>
-            <inherited>true</inherited>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.0</version>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-                <failOnError>true</failOnError>
-                <optimize>true</optimize>
-                <debug>true</debug>
-                <encoding>UTF-8</encoding>
-            </configuration>
-        </plugin>
-        <plugin>
+      <plugin>
+        <inherited>true</inherited>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <failOnError>true</failOnError>
+          <optimize>true</optimize>
+          <debug>true</debug>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.1.1</version>
+
         <executions>
+          <execution>
+            <id>jar-with-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>aipo-migration-cybozuLive-${project.version}</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <archive>
+                <manifest>
+                  <mainClass>com.aipo.migration.cybozulive.App</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </execution>
           <execution>
             <id>make-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <finalName>aipo-migration-cybozuLive</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/main/assembly/distribution.xml</descriptor>
+              </descriptors>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-            <descriptors>
-              <descriptor>src/main/assembly/distribution.xml</descriptor>
-            </descriptors>
-            <finalName>aipo-migration-cybozuLive</finalName>
-            <appendAssemblyId>false</appendAssemblyId>
-            <archive>
-              <manifest>
-                <mainClass>com.aipo.migration.cybozulive.App</mainClass>
-              </manifest>
-            </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
       </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.0.0</version>
-            </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.7.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+      </plugin>
     </plugins>
   </build>
   <reporting>
@@ -177,7 +192,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-            <version>3.0.5</version>
+        <version>3.0.5</version>
         <configuration>
           <effort>Max</effort>
           <findbugsXmlOutput>true</findbugsXmlOutput>

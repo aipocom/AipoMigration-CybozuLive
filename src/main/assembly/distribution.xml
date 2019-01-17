@@ -16,6 +16,7 @@
             <outputDirectory>/</outputDirectory>
              <includes>
                 <include>version.txt</include>
+                <include>README.txt</include>
                 <include>*.bat</include>
                 <include>*-csv</include>
             </includes>

@@ -12,6 +12,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -52,6 +53,9 @@ public class App {
 
   /** AipoユーザーCSVファイル名 */
   private static final String AIPO_USER_CSV_PREFIX = "Aipo_users";
+
+  /** AipoカレンダーCSVファイル名 */
+  private static final String AIPO_CALENDAR_CSV_PREFIX = "Aipo_calendar";
 
   private static final String FILE_SUFFIX = "yyyyMMddHHmm";
 
@@ -153,6 +157,221 @@ public class App {
     }).collect(Collectors.toList());
   }
 
+  /**
+   * カレンダーCSVエクスポート
+   *
+   * @param divide
+   * @throws IOException
+   */
+  public static void calendarExport(List<List<CSVRecord>> divide)
+      throws IOException {
+    // CSVファイルを出力
+    SimpleDateFormat sdf = new SimpleDateFormat(FILE_SUFFIX);
+    String format = sdf.format(new Date());
+    int i = 0;
+    if (divide != null && divide.size() > 0) {
+      for (List<CSVRecord> fileList : divide) {
+        CSVPrinter csvPrinter = null;
+        try {
+          i++;
+          csvPrinter =
+            CSVFormat.EXCEL
+              .withQuote('"')
+              .withHeader(
+                "開始日",
+                "開始時刻",
+                "終了日",
+                "終了時刻",
+                "場所",
+                "予定",
+                "内容",
+                "名前",
+                "メールアドレス")
+              .print(
+                makeCsvFile(
+                  AIPO_CALENDAR_CSV_PREFIX + "_" + format + "_" + i + ".csv"));
+          if (fileList != null && fileList.size() > 0) {
+            for (CSVRecord s : fileList) {
+              String startDate = "";
+              String startTime = "";
+              String endDate = "";
+              String endTime = "";
+              String title = "";
+              String memo = "";
+              String facility = "";
+              String userName = "";
+
+              if (s.isSet("開始日付")) {
+                startDate = s.get("開始日付");
+              }
+              if (s.isSet("開始時刻")) {
+                // 秒を削除
+                startTime = s.get("開始時刻");
+              }
+              if (s.isSet("終了日付")) {
+                endDate = s.get("終了日付");
+              }
+              if (s.isSet("終了時刻")) {
+                // 秒を削除
+                endTime = s.get("終了時刻");
+              }
+              if (s.isSet("タイトル")) {
+                title = s.get("タイトル");
+                // Aipoではタイトル必須のため
+                if ("".equals(title)) {
+                  title = "---";
+                }
+              }
+              // 最大99文字
+              if (title.length() > 100) {
+                title = title.substring(0, 99);
+              }
+              if (s.isSet("メモ")) {
+                memo = s.get("メモ");
+                // 文字化けするため対応
+                if (" ".equals(memo)) {
+                  memo = "";
+                }
+              }
+              if (s.isSet("設備")) {
+                facility = s.get("設備");
+              }
+              // 最大99文字
+              if (facility.length() > 100) {
+                facility = facility.substring(0, 99);
+              }
+              if (s.isSet("参加者")) {
+                userName = s.get("参加者");
+              }
+
+              // 日またぎ時に処理
+              if (!(startDate.equals(endDate)) && !startTime.isEmpty()) {
+                csvPrinter.printRecord(
+                  startDate,
+                  "",
+                  endDate,
+                  "",
+                  facility,
+                  title,
+                  memo,
+                  userName,
+                  "");
+              } else {
+                csvPrinter.printRecord(
+                  startDate,
+                  startTime,
+                  endDate,
+                  endTime,
+                  facility,
+                  title,
+                  memo,
+                  userName,
+                  "");
+              }
+
+            }
+          }
+        } catch (Exception e) {
+          System.out.println("エラーが発生しました。");
+          System.out.println(e);
+        } finally {
+          if (csvPrinter != null) {
+            csvPrinter.close();
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * ユーザー名簿CSVエクスポート
+   *
+   * @param divide
+   * @throws IOException
+   */
+  public static void memberExport(List<List<CSVRecord>> divide)
+      throws IOException {
+    // CSVファイルを出力
+    SimpleDateFormat sdf = new SimpleDateFormat(FILE_SUFFIX);
+    String format = sdf.format(new Date());
+    int i = 0;
+    if (divide != null && divide.size() > 0) {
+      for (List<CSVRecord> fileList : divide) {
+        CSVPrinter csvPrinter = null;
+        try {
+          i++;
+          csvPrinter =
+            CSVFormat.EXCEL
+              .withQuote('"')
+              .withHeader(
+                "ユーザー名（メールアドレス）",
+                "パスワード",
+                "名前（姓）",
+                "名前（名）",
+                "名前（姓・フリガナ）",
+                "名前（名・フリガナ）",
+                "電話番号（外線）",
+                "電話番号（内線）",
+                "電話番号（携帯）",
+                "携帯メールアドレス",
+                "部署名",
+                "役職",
+                "社員コード")
+              .print(
+                makeCsvFile(
+                  AIPO_USER_CSV_PREFIX + "_" + format + "_" + i + ".csv"));
+          if (fileList != null && fileList.size() > 0) {
+            for (CSVRecord s : fileList) {
+
+              String lastName = "";
+              String firstName = "";
+              String kanaLastName = "";
+              String kanaFirstName = "";
+              String email = "";
+
+              if (s.isSet("姓")) {
+                lastName = s.get("姓");
+              }
+              if (s.isSet("名")) {
+                firstName = s.get("名");
+              }
+              if (s.isSet("よみがな姓")) {
+                kanaLastName = s.get("よみがな姓");
+              }
+              if (s.isSet("よみがな名")) {
+                kanaFirstName = s.get("よみがな名");
+              }
+              if (s.isSet("メールアドレス")) {
+                email = s.get("メールアドレス");
+              }
+              csvPrinter.printRecord(
+                email,
+                generatePassword(8),
+                lastName,
+                firstName,
+                kanaLastName,
+                kanaFirstName,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "");
+            }
+          }
+        } catch (Exception e) {
+          System.out.println("エラーが発生しました。");
+          System.out.println(e);
+        } finally {
+          if (csvPrinter != null) {
+            csvPrinter.close();
+          }
+        }
+      }
+    }
+  }
+
   public static void main(String[] args) {
     try {
       HashMap<Integer, File> cybozuLiveFiles = getCybozuLiveFiles();
@@ -176,8 +395,6 @@ public class App {
 
         Reader in = null;
         try {
-          SimpleDateFormat sdf = new SimpleDateFormat(FILE_SUFFIX);
-          String format = sdf.format(new Date());
 
           // Aipo用に変換するCSVファイルを引数の記述する
           in =
@@ -199,71 +416,15 @@ public class App {
           // 読み込んだCSVを50行区切りに分割する
           List<List<CSVRecord>> divide = divide(recordList, MAX_ROWS);
 
-          int i = 0;
-          // CSVファイルを出力
-          if (divide != null && divide.size() > 0) {
-            for (List<CSVRecord> fileList : divide) {
-              CSVPrinter csvPrinter = null;
-              try {
-                i++;
-                csvPrinter =
-                  CSVFormat.EXCEL
-                    .withQuote('"')
-                    .withHeader(
-                      "ユーザー名（メールアドレス）",
-                      "パスワード",
-                      "名前（姓）",
-                      "名前（名）",
-                      "名前（姓・フリガナ）",
-                      "名前（名・フリガナ）",
-                      "電話番号（外線）",
-                      "電話番号（内線）",
-                      "電話番号（携帯）",
-                      "携帯メールアドレス",
-                      "部署名",
-                      "役職",
-                      "社員コード")
-                    .print(
-                      makeCsvFile(
-                        AIPO_USER_CSV_PREFIX
-                          + "_"
-                          + format
-                          + "_"
-                          + i
-                          + ".csv"));
-                if (fileList != null && fileList.size() > 0) {
-                  for (CSVRecord s : fileList) {
-                    String lastName = s.get("姓");
-                    String firstName = s.get("名");
-                    String kanaLastName = s.get("よみがな姓");
-                    String kanaFirstName = s.get("よみがな名");
-                    String email = s.get("メールアドレス");
-                    csvPrinter.printRecord(
-                      email,
-                      generatePassword(8),
-                      lastName,
-                      firstName,
-                      kanaLastName,
-                      kanaFirstName,
-                      "",
-                      "",
-                      "",
-                      "",
-                      "",
-                      "",
-                      "");
-                  }
-                }
-              } catch (Exception e) {
-                System.out.println("エラーが発生しました。");
-                System.out.println(e);
-              } finally {
-                if (csvPrinter != null) {
-                  csvPrinter.close();
-                }
-              }
-            }
+          // 読み込んだCSVファイルのヘッダーの情報を元に条件分岐
+          if (parser.getHeaderMap().containsKey("開始日付")) {
+            System.out.print("カレンダーCSVファイル");
+            calendarExport(divide);
+          } else if (parser.getHeaderMap().containsKey("姓")) {
+            System.out.print("メンバー名簿CSVファイル");
+            memberExport(divide);
           }
+
         } catch (Exception e) {
           System.out.println("エラーが発生しました。");
           System.out.println(e);

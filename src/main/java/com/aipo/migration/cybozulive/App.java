@@ -205,25 +205,40 @@ public class App {
                 startDate = s.get("開始日付");
               }
               if (s.isSet("開始時刻")) {
+                // 秒を削除
                 startTime = s.get("開始時刻");
               }
               if (s.isSet("終了日付")) {
                 endDate = s.get("終了日付");
               }
               if (s.isSet("終了時刻")) {
+                // 秒を削除
                 endTime = s.get("終了時刻");
-              }
-              if (s.isSet("開始時刻")) {
-                startTime = s.get("開始時刻");
               }
               if (s.isSet("タイトル")) {
                 title = s.get("タイトル");
+                // Aipoではタイトル必須のため
+                if ("".equals(title)) {
+                  title = "---";
+                }
+              }
+              // 最大99文字
+              if (title.length() > 100) {
+                title = title.substring(0, 99);
               }
               if (s.isSet("メモ")) {
                 memo = s.get("メモ");
+                // 文字化けするため対応
+                if (" ".equals(memo)) {
+                  memo = "";
+                }
               }
               if (s.isSet("設備")) {
                 facility = s.get("設備");
+              }
+              // 最大99文字
+              if (facility.length() > 100) {
+                facility = facility.substring(0, 99);
               }
               if (s.isSet("参加者")) {
                 userName = s.get("参加者");

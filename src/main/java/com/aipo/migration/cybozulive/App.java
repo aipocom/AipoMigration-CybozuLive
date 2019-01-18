@@ -157,9 +157,17 @@ public class App {
     }).collect(Collectors.toList());
   }
 
-  public static void calendarExport(List<List<CSVRecord>> divide, String format)
+  /**
+   * カレンダーCSVエクスポート
+   *
+   * @param divide
+   * @throws IOException
+   */
+  public static void calendarExport(List<List<CSVRecord>> divide)
       throws IOException {
     // CSVファイルを出力
+    SimpleDateFormat sdf = new SimpleDateFormat(FILE_SUFFIX);
+    String format = sdf.format(new Date());
     int i = 0;
     if (divide != null && divide.size() > 0) {
       for (List<CSVRecord> fileList : divide) {
@@ -193,24 +201,33 @@ public class App {
               String facility = "";
               String userName = "";
 
-              if (s.isSet("開始日付"))
+              if (s.isSet("開始日付")) {
                 startDate = s.get("開始日付");
-              if (s.isSet("開始時刻"))
+              }
+              if (s.isSet("開始時刻")) {
                 startTime = s.get("開始時刻");
-              if (s.isSet("終了日付"))
+              }
+              if (s.isSet("終了日付")) {
                 endDate = s.get("終了日付");
-              if (s.isSet("終了時刻"))
+              }
+              if (s.isSet("終了時刻")) {
                 endTime = s.get("終了時刻");
-              if (s.isSet("開始時刻"))
+              }
+              if (s.isSet("開始時刻")) {
                 startTime = s.get("開始時刻");
-              if (s.isSet("タイトル"))
+              }
+              if (s.isSet("タイトル")) {
                 title = s.get("タイトル");
-              if (s.isSet("メモ"))
+              }
+              if (s.isSet("メモ")) {
                 memo = s.get("メモ");
-              if (s.isSet("設備"))
+              }
+              if (s.isSet("設備")) {
                 facility = s.get("設備");
-              if (s.isSet("参加者"))
+              }
+              if (s.isSet("参加者")) {
                 userName = s.get("参加者");
+              }
 
               // 日またぎ時に処理
               if (!(startDate.equals(endDate)) && !startTime.isEmpty()) {
@@ -251,9 +268,17 @@ public class App {
     }
   }
 
-  public static void memberExport(List<List<CSVRecord>> divide, String format)
+  /**
+   * ユーザー名簿CSVエクスポート
+   *
+   * @param divide
+   * @throws IOException
+   */
+  public static void memberExport(List<List<CSVRecord>> divide)
       throws IOException {
     // CSVファイルを出力
+    SimpleDateFormat sdf = new SimpleDateFormat(FILE_SUFFIX);
+    String format = sdf.format(new Date());
     int i = 0;
     if (divide != null && divide.size() > 0) {
       for (List<CSVRecord> fileList : divide) {
@@ -289,16 +314,21 @@ public class App {
               String kanaFirstName = "";
               String email = "";
 
-              if (s.isSet("姓"))
+              if (s.isSet("姓")) {
                 lastName = s.get("姓");
-              if (s.isSet("名"))
+              }
+              if (s.isSet("名")) {
                 firstName = s.get("名");
-              if (s.isSet("よみがな姓"))
+              }
+              if (s.isSet("よみがな姓")) {
                 kanaLastName = s.get("よみがな姓");
-              if (s.isSet("よみがな名"))
+              }
+              if (s.isSet("よみがな名")) {
                 kanaFirstName = s.get("よみがな名");
-              if (s.isSet("メールアドレス"))
+              }
+              if (s.isSet("メールアドレス")) {
                 email = s.get("メールアドレス");
+              }
               csvPrinter.printRecord(
                 email,
                 generatePassword(8),
@@ -350,8 +380,6 @@ public class App {
 
         Reader in = null;
         try {
-          SimpleDateFormat sdf = new SimpleDateFormat(FILE_SUFFIX);
-          String format = sdf.format(new Date());
 
           // Aipo用に変換するCSVファイルを引数の記述する
           in =
@@ -376,10 +404,10 @@ public class App {
           // 読み込んだCSVファイルのヘッダーの情報を元に条件分岐
           if (parser.getHeaderMap().containsKey("開始日付")) {
             System.out.print("カレンダーCSVファイル");
-            calendarExport(divide, format);
+            calendarExport(divide);
           } else if (parser.getHeaderMap().containsKey("姓")) {
             System.out.print("メンバー名簿CSVファイル");
-            memberExport(divide, format);
+            memberExport(divide);
           }
 
         } catch (Exception e) {

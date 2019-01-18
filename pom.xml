@@ -54,7 +54,8 @@
         <includes>
           <include>**/version.txt</include>
           <include>**/README.txt</include>
-          <include>**/aipo-migration-cybozuLive.bat</include>
+          <include>**/aipo-migration.bat</include>
+          <include>**/aipo-migration.command</include>
         </includes>
       </resource>
       <resource>
@@ -63,7 +64,8 @@
         <excludes>
           <exclude>**/version.txt</exclude>
           <exclude>**/README.txt</exclude>
-          <exclude>**/aipo-migration-cybozuLive.bat</exclude>
+          <exclude>**/aipo-migration.bat</exclude>
+          <exclude>**/aipo-migration.command</exclude>
         </excludes>
       </resource>
     </resources>
@@ -162,16 +164,30 @@
             </configuration>
           </execution>
           <execution>
-            <id>make-assembly</id>
+            <id>make-assembly-windows</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
             <configuration>
-              <finalName>aipo-migration-cybozuLive</finalName>
+              <finalName>aipo-migration-cybozuLive-win</finalName>
               <appendAssemblyId>false</appendAssemblyId>
               <descriptors>
-                <descriptor>src/main/assembly/distribution.xml</descriptor>
+                <descriptor>src/main/assembly/distribution-win.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>make-assembly-mac</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>aipo-migration-cybozuLive-mac</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/main/assembly/distribution-mac.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

@@ -39,7 +39,7 @@ public class App {
     private static final String OUTPUT_CSV_CHARSET = "Shift-JIS";
 
     /** 入力CSVファイル文字コード */
-    private static final String INPUT_CSV_CHARSET = "UTF-8";
+    private static final String INPUT_CSV_CHARSET = "Shift-JIS";
 
     /** パスワード */
     private static final String PASSWORD_CHARSET = "!0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -75,6 +75,25 @@ public class App {
             sb.append(PASSWORD_CHARSET.charAt(pos));
         }
         return sb.toString();
+    }
+
+    /**
+     * カナ変換
+     *
+     * @param str
+     * @return
+     */
+    public static String convertKana(String str) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < str.length(); i++) {
+            char code = str.charAt(i);
+            if ((code >= 0x3041) && (code <= 0x3093)) {
+                buf.append((char) (code + 0x60));
+            } else {
+                buf.append(code);
+            }
+        }
+        return buf.toString();
     }
 
     /**

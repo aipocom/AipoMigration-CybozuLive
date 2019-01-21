@@ -334,7 +334,7 @@ public class App {
                 }
             }
             System.out.println("[0] キャンセル");
-            System.out.println("CybozuLiveから移行したいファイルを選んで番号を入力してください：");
+            System.out.println("サイボウズLive から移行したいファイルを選んで番号を入力してください：");
             Scanner scan = new Scanner(System.in, INPUT_CSV_CHARSET);
             String nextLine = scan.nextLine();
             scan.close();

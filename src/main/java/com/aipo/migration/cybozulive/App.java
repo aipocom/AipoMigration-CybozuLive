@@ -224,9 +224,9 @@ public class App {
                                     title = "---";
                                 }
                             }
-                            // 最大99文字
-                            if (title.length() > 100) {
-                                title = title.substring(0, 99);
+                            // 最大50文字
+                            if (title.length() > 51) {
+                                title = title.substring(0, 50);
                             }
                             if (s.isSet("メモ")) {
                                 memo = s.get("メモ");
@@ -235,12 +235,16 @@ public class App {
                                     memo = "";
                                 }
                             }
+
                             if (s.isSet("設備")) {
                                 facility = s.get("設備");
                             }
-                            // 最大99文字
-                            if (facility.length() > 100) {
-                                facility = facility.substring(0, 99);
+                            // 複数個登録されている施設を","で区切る
+                            if (facility.length() > 51) {
+                                facility = facility.substring(0, 50);
+                                StringBuilder sbfacility = new StringBuilder(facility);
+                                int indexNum = sbfacility.lastIndexOf(",");
+                                facility = facility.substring(0, indexNum);
                             }
                             if (s.isSet("参加者")) {
                                 userName = s.get("参加者");

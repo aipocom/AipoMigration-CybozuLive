@@ -306,15 +306,18 @@ public class App {
                             if (s.isSet("よみがな姓")) {
                                 kanaLastName = s.get("よみがな姓");
                             }
-                            // よみがなが登録されていなかった場合
-                            if ("".equals(s.get("よみがな姓"))) {
-                                kanaLastName = "未登録";
-                            }
-                            if (s.isSet("よみがな名") && "".equals(s.get("よみがな名"))) {
-                                kanaFirstName = "未登録";
-                            } else {
+                            if (s.isSet("よみがな名")) {
                                 kanaFirstName = s.get("よみがな名");
                             }
+
+                            // よみがなが登録されていなかった場合
+                            if ("".equals(kanaLastName)) {
+                                kanaLastName = "未登録";
+                            }
+                            if ("".equals(kanaFirstName)) {
+                                kanaFirstName = "未登録";
+                            }
+
                             csvPrinter.printRecord(email, generatePassword(8), lastName, firstName,
                                     convertKana(kanaLastName), convertKana(kanaFirstName), "", "", "", "", "", "", "");
                         }

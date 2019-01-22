@@ -303,11 +303,12 @@ public class App {
                             if (s.isSet("メールアドレス")) {
                                 email = s.get("メールアドレス");
                             }
-                            // よみがなが登録されていなかった場合
-                            if (s.isSet("よみがな姓") && "".equals(s.get("よみがな姓"))) {
-                                kanaLastName = "未登録";
-                            } else {
+                            if (s.isSet("よみがな姓")) {
                                 kanaLastName = s.get("よみがな姓");
+                            }
+                            // よみがなが登録されていなかった場合
+                            if ("".equals(s.get("よみがな姓"))) {
+                                kanaLastName = "未登録";
                             }
                             if (s.isSet("よみがな名") && "".equals(s.get("よみがな名"))) {
                                 kanaFirstName = "未登録";

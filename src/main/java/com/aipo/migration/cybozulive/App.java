@@ -300,15 +300,24 @@ public class App {
                             if (s.isSet("名")) {
                                 firstName = s.get("名");
                             }
+                            if (s.isSet("メールアドレス")) {
+                                email = s.get("メールアドレス");
+                            }
                             if (s.isSet("よみがな姓")) {
                                 kanaLastName = s.get("よみがな姓");
                             }
                             if (s.isSet("よみがな名")) {
                                 kanaFirstName = s.get("よみがな名");
                             }
-                            if (s.isSet("メールアドレス")) {
-                                email = s.get("メールアドレス");
+
+                            // よみがなが登録されていなかった場合
+                            if ("".equals(kanaLastName)) {
+                                kanaLastName = "未登録";
                             }
+                            if ("".equals(kanaFirstName)) {
+                                kanaFirstName = "未登録";
+                            }
+
                             csvPrinter.printRecord(email, generatePassword(8), lastName, firstName,
                                     convertKana(kanaLastName), convertKana(kanaFirstName), "", "", "", "", "", "", "");
                         }

@@ -222,8 +222,8 @@ public class App {
                                 }
                             }
                             // 最大99文字
-                            if (title.length() > 100) {
-                                title = title.substring(0, 99);
+                            if (title.length() > 51) {
+                                title = title.substring(0, 50);
                             }
                             if (s.isSet("メモ")) {
                                 memo = s.get("メモ");

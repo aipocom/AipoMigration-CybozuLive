@@ -210,11 +210,12 @@ public class App {
                             if (s.isSet("開始時刻")) {
                                 startTime = s.get("開始時刻");
                             }
-                            // 終了時間未指定の場合
-                            if (s.isSet("終了時刻") && "".equals(s.get("終了時刻"))) {
-                                endTime = startTime;
-                            } else if (s.isSet("終了時刻")) {
+                            if (s.isSet("終了時刻")) {
                                 endTime = s.get("終了時刻");
+                            }
+                            // 終了時間未指定の場合
+                            if (!"".equals(startTime) && "".equals(endTime)) {
+                                endTime = startTime;
                             }
                             if (s.isSet("タイトル")) {
                                 title = s.get("タイトル");
